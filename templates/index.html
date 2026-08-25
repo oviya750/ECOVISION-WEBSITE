@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}
+ECOVISION | Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                ● LIVE ENVIRONMENTAL INTELLIGENCE
+            </div>
+
+            <h1>
+                {{ selected_country }}
+                <span>Dashboard</span>
+            </h1>
+
+            <p>
+                A comprehensive view of environmental,
+                e-waste and socioeconomic indicators for
+                <strong>{{ selected_country }}</strong>.
+            </p>
+
+        </div>
+
+
+        <div class="ai-orb">
+
+            <div class="orb-core">
+                AI
+            </div>
+
+            <span class="orb-label">
+                AI ANALYSIS
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <section class="metric-grid">
+
+
+        <div class="metric-card">
+
+            <span class="metric-label">
+                AI RISK SCORE
+            </span>
+
+            <strong>
+                {{ risk_score }}%
+            </strong>
+
+            <small>
+                Environmental pressure index
+            </small>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <span class="metric-label">
+                RISK LEVEL
+            </span>
+
+            <strong>
+                {{ risk_level }}
+            </strong>
+
+            <small>
+                Current classification
+            </small>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <span class="metric-label">
+                AI CONFIDENCE
+            </span>
+
+            <strong>
+                {{ ai_confidence }}%
+            </strong>
+
+            <small>
+                Data-based confidence
+            </small>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <span class="metric-label">
+                COUNTRIES
+            </span>
+
+            <strong>
+                {{ total_countries }}
+            </strong>
+
+            <small>
+                Available in dataset
+            </small>
+
+        </div>
+
+
+    </section>
+
+
+    <section class="section">
+
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="eyebrow">
+                    COUNTRY PROFILE
+                </div>
+
+                <h2>
+                    Complete Dataset
+                </h2>
+
+            </div>
+
+            <span class="live-pill">
+                {{ selected_country }}
+            </span>
+
+        </div>
+
+
+        {% if country_data %}
+
+        <div class="data-grid">
+
+            {% for key, value in country_data.items() %}
+
+            <article class="data-card">
+
+                <span>
+                    {{ key.replace("_", " ") }}
+                </span>
+
+                <strong>
+                    {{ value }}
+                </strong>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>
+                No country data available
+            </h3>
+
+            <p>
+                Check the dataset location and restart Flask.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+    </section>
+
+</div>
+
+{% endblock %}

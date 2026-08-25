@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+ECOVISION | Countries
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+    <section class="page-header">
+
+        <div class="eyebrow">
+            GLOBAL COVERAGE
+        </div>
+
+        <h1>
+            Countries
+            <span>Explorer</span>
+        </h1>
+
+        <p>
+            Select a country to explore its complete
+            environmental profile.
+        </p>
+
+    </section>
+
+
+    <section class="country-grid">
+
+        {% for country in countries %}
+
+        <a
+            href="{{ url_for('index', country=country) }}"
+            class="country-card
+            {% if country == selected_country %}
+                selected
+            {% endif %}"
+        >
+
+            <span>
+                COUNTRY
+            </span>
+
+            <strong>
+                {{ country }}
+            </strong>
+
+            {% if country == selected_country %}
+
+            <small>
+                ● CURRENTLY SELECTED
+            </small>
+
+            {% endif %}
+
+        </a>
+
+        {% endfor %}
+
+    </section>
+
+</div>
+
+{% endblock %}

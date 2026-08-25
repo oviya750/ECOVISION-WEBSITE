@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}
+ECOVISION | Recommendations
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+
+    <section class="page-header">
+
+        <div class="eyebrow">
+            AI ACTION CENTER
+        </div>
+
+        <h1>
+            Recommendations
+            <span>{{ selected_country }}</span>
+        </h1>
+
+        <p>
+            Data-driven environmental actions recommended
+            for {{ selected_country }}.
+        </p>
+
+    </section>
+
+
+    <section class="recommendation-grid">
+
+        {% for title, description in recommendations %}
+
+        <article class="recommendation-card">
+
+            <div class="recommendation-number">
+                {{ "%02d"|format(loop.index) }}
+            </div>
+
+            <div>
+
+                <div class="recommendation-tag">
+                    RECOMMENDED ACTION
+                </div>
+
+                <h3>
+                    {{ title }}
+                </h3>
+
+                <p>
+                    {{ description }}
+                </p>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="eyebrow">
+                    COUNTRY EVIDENCE
+                </div>
+
+                <h2>
+                    {{ selected_country }} Data
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="data-grid">
+
+            {% for key, value in country_data.items() %}
+
+            <article class="data-card">
+
+                <span>
+                    {{ key.replace("_", " ") }}
+                </span>
+
+                <strong>
+                    {{ value }}
+                </strong>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

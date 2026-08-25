@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EcoVision AI | Global Waste Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="brand-mark">EV</span><span><b>ECOVISION</b><small>AI INTELLIGENCE</small></span></div>
+    <nav aria-label="Primary navigation">
+        <a class="active" href="/dashboard">◈ <span>Overview</span></a>
+        <a href="#analytics">◌ <span>Global Waste</span></a>
+        <a href="/countries">◎ <span>Countries</span></a>
+        <a href="#regional">⌁ <span>Regional Analysis</span></a>
+        <a href="#decision">✦ <span>AI Insights</span></a>
+        <a href="#powerbi">▣ <span>Power BI Analytics</span></a>
+        <a href="/about">ⓘ <span>About</span></a>
+    </nav>
+    <div class="sidebar-foot"><span class="online-dot"></span> SYSTEM ONLINE<small id="datasetStatus">Loading dataset...</small></div>
+</aside>
+<main class="main">
+    <header class="topbar"><button class="menu" id="menuButton" aria-label="Open navigation">☰</button><div><small class="mono accent">LIVE / ENVIRONMENTAL INTELLIGENCE</small><h1>Global waste intelligence</h1></div><div class="header-tools"><label class="search"><span>⌕</span><input id="countrySearch" type="search" placeholder="Search a country..." aria-label="Search country"><div id="searchResults"></div></label><span class="status-pill"><i></i> DATA ENGINE ONLINE</span></div></header>
+    <section class="hero"><div><p class="mono accent">ECOVISION AI / DECISION SUPPORT</p><h2>Turning global environmental data into explainable country-level decisions.</h2><p class="hero-copy">Analyze waste generation, recovery gaps and disposal pressure across 217 countries with a transparent risk engine.</p></div><div class="hero-orbit"><strong id="heroRisk">--</strong><span>AI RISK SCORE</span></div></section>
+    <section class="filters" aria-label="Dashboard filters"><label>COUNTRY<select id="countryFilter"><option value="">All countries</option></select></label><label>REGION<select id="regionFilter"><option value="">All regions</option></select></label><label>INCOME GROUP<select id="incomeFilter"><option value="">All groups</option></select></label><label>YEAR<select id="yearFilter"><option value="">All years</option></select></label><button id="resetFilters" class="button ghost">RESET</button></section>
+    <div id="errorBox" class="error" hidden></div>
+    <section class="kpi-grid" id="analytics" aria-live="polite">
+        <article class="kpi"><span>COUNTRIES</span><strong id="kpiCountries">--</strong><small>in current view</small></article><article class="kpi"><span>TOTAL MSW</span><strong id="kpiMsw">--</strong><small>tonnes / year</small></article><article class="kpi"><span>RECYCLING RATE</span><strong id="kpiRecycling">--</strong><small>average reported</small></article><article class="kpi"><span>POPULATION</span><strong id="kpiPopulation">--</strong><small>people represented</small></article><article class="kpi"><span>COLLECTION</span><strong id="kpiCollection">--</strong><small>coverage average</small></article><article class="kpi danger"><span>AI RISK</span><strong id="kpiRisk">--</strong><small id="kpiRiskLevel">Analyzing...</small></article><article class="kpi"><span>SUSTAINABILITY</span><strong id="kpiSustainability">--</strong><small>0 to 100 score</small></article><article class="kpi"><span>AI CONFIDENCE</span><strong id="kpiConfidence">--</strong><small>based on available metrics</small></article>
+    </section>
+    <section class="dashboard-grid" id="regional"><article class="panel wide"><div class="panel-head"><div><span class="mono accent">REGIONAL SIGNALS</span><h3>Waste generation by region</h3></div><span class="panel-note">Tonnes / year</span></div><div class="chart-wrap"><canvas id="regionChart"></canvas></div></article><article class="panel"><div class="panel-head"><div><span class="mono accent">RECOVERY INDEX</span><h3>Recycling by region</h3></div></div><div class="chart-wrap"><canvas id="recyclingChart"></canvas></div></article><article class="panel wide"><div class="panel-head"><div><span class="mono accent">GLOBAL RANKING</span><h3>Top waste generating countries</h3></div></div><div id="countryRanking" class="ranking"></div></article></section>
+    <section class="decision panel" id="decision"><div class="panel-head"><div><span class="mono accent">EXPLAINABLE AI / DECISION CENTER</span><h3>Country diagnosis</h3></div><span id="decisionCountry" class="country-chip">All countries</span></div><div class="decision-grid"><div><div class="score-ring"><strong id="decisionScore">--</strong><span>RISK SCORE</span></div><p id="diagnosis">Select a country to generate a personalized environmental diagnosis.</p></div><div><span class="label">TOP RISK DRIVERS</span><div id="drivers" class="drivers"></div></div><div><span class="label">PRIORITY ACTION</span><h4 id="priority">Awaiting country selection</h4><p id="implementation" class="muted"></p></div></div></section>
+    <section class="bottom-grid"><article class="panel"><div class="panel-head"><div><span class="mono accent">METHODOLOGY</span><h3>From data to decision</h3></div></div><ol class="story"><li><b>01</b><span><strong>DATASET</strong>Global environmental indicators</span></li><li><b>02</b><span><strong>AI RISK ENGINE</strong>Weighted, explainable pressure model</span></li><li><b>03</b><span><strong>RECOMMENDATION</strong>Country-specific action plan</span></li></ol></article><article class="panel" id="powerbi"><div class="panel-head"><div><span class="mono accent">BUSINESS INTELLIGENCE</span><h3>Power BI analytics</h3></div></div><div class="powerbi"><img src="{{ url_for('static', filename='images/dashboard.png') }}" alt="Power BI dashboard preview" loading="lazy"><p>EcoVision AI advanced business intelligence showcase.</p></div></article></section>
+    </main>
+</body>
+</html>
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadFilters();
+
+        document
+            .getElementById("countryFilter")
+            .addEventListener(
+                "change",
+                function () {
+
+                    updateDependentFilters("country");
+
+                }
+            );
+
+        document
+            .getElementById("regionFilter")
+            .addEventListener(
+                "change",
+                function () {
+
+                    updateDependentFilters("region");
+
+                }
+            );
+
+        document
+            .getElementById("incomeFilter")
+            .addEventListener(
+                "change",
+                function () {
+
+                    updateDashboard();
+
+                }
+            );
+
+    }
+);
+
+
+/* =====================================================
+   LOAD INITIAL FILTERS
+===================================================== */
+
+async function loadFilters() {
+
+    try {
+
+        const response =
+            await fetch("/api/filters");
+
+        const result =
+            await response.json();
+
+
+        populateSelect(
+            "countryFilter",
+            result.countries,
+            "All Countries"
+        );
+
+        populateSelect(
+            "regionFilter",
+            result.regions,
+            "All Regions"
+        );
+
+        populateSelect(
+            "incomeFilter",
+            result.income_groups,
+            "All Income Groups"
+        );
+
+
+        await updateDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Filter error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DEPENDENT FILTERS
+===================================================== */
+
+async function updateDependentFilters(
+    changedFilter
+) {
+
+    const country =
+        document
+        .getElementById(
+            "countryFilter"
+        ).value;
+
+
+    const region =
+        document
+        .getElementById(
+            "regionFilter"
+        ).value;
+
+
+    const income =
+        document
+        .getElementById(
+            "incomeFilter"
+        ).value;
+
+
+    const params =
+        new URLSearchParams();
+
+
+    if (country) {
+
+        params.append(
+            "country",
+            country
+        );
+
+    }
+
+
+    if (region) {
+
+        params.append(
+            "region",
+            region
+        );
+
+    }
+
+
+    if (income) {
+
+        params.append(
+            "income",
+            income
+        );
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/filter-options?" +
+                params.toString()
+            );
+
+
+        const result =
+            await response.json();
+
+
+        /*
+         * Country selected
+         * ----------------
+         * Automatically select
+         * correct Region + Income
+         */
+
+        if (
+            changedFilter === "country" &&
+            country
+        ) {
+
+            if (
+                result.regions.length > 0
+            ) {
+
+                setSelectValue(
+                    "regionFilter",
+                    result.regions[0]
+                );
+
+            }
+
+
+            if (
+                result.income_groups.length > 0
+            ) {
+
+                setSelectValue(
+                    "incomeFilter",
+                    result.income_groups[0]
+                );
+
+            }
+
+        }
+
+
+        /*
+         * Region selected
+         */
+
+        if (
+            changedFilter === "region" &&
+            region
+        ) {
+
+            populateSelect(
+                "incomeFilter",
+                result.income_groups,
+                "All Income Groups"
+            );
+
+        }
+
+
+        await updateDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dependent filter error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SET SELECT VALUE
+===================================================== */
+
+function setSelectValue(
+    elementId,
+    value
+) {
+
+    const select =
+        document.getElementById(
+            elementId
+        );
+
+
+    const exists =
+        Array.from(
+            select.options
+        ).some(
+            option =>
+                option.value === value
+        );
+
+
+    if (!exists) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+        option.value = value;
+
+        option.textContent = value;
+
+        select.appendChild(
+            option
+        );
+
+    }
+
+
+    select.value = value;
+
+}
+
+
+/* =====================================================
+   POPULATE SELECT
+===================================================== */
+
+function populateSelect(
+    elementId,
+    values,
+    defaultText
+) {
+
+    const select =
+        document.getElementById(
+            elementId
+        );
+
+
+    select.innerHTML = "";
+
+
+    const defaultOption =
+        document.createElement(
+            "option"
+        );
+
+
+    defaultOption.value = "";
+
+    defaultOption.textContent =
+        defaultText;
+
+
+    select.appendChild(
+        defaultOption
+    );
+
+
+    if (
+        !Array.isArray(values)
+    ) {
+
+        return;
+
+    }
+
+
+    values.forEach(
+        function (value) {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                value;
+
+
+            option.textContent =
+                value;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE DASHBOARD
+===================================================== */
+
+async function updateDashboard() {
+
+    const country =
+        document
+        .getElementById(
+            "countryFilter"
+        ).value;
+
+
+    const region =
+        document
+        .getElementById(
+            "regionFilter"
+        ).value;
+
+
+    const income =
+        document
+        .getElementById(
+            "incomeFilter"
+        ).value;
+
+
+    const params =
+        new URLSearchParams();
+
+
+    if (country) {
+
+        params.append(
+            "country",
+            country
+        );
+
+    }
+
+
+    if (region) {
+
+        params.append(
+            "region",
+            region
+        );
+
+    }
+
+
+    if (income) {
+
+        params.append(
+            "income",
+            income
+        );
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/dashboard?" +
+                params.toString()
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            console.error(
+                result.message
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            result.data;
+
+
+        /*
+         * UPDATE CARDS
+         */
+
+        document.getElementById(
+            "totalCountries"
+        ).textContent =
+            formatNumber(
+                data.total_countries
+            );
+
+
+        document.getElementById(
+            "totalMSW"
+        ).textContent =
+            formatLargeNumber(
+                data.total_msw
+            );
+
+
+        document.getElementById(
+            "averageRecycling"
+        ).textContent =
+            formatPercentage(
+                data.average_recycling
+            );
+
+
+        document.getElementById(
+            "totalPopulation"
+        ).textContent =
+            formatLargeNumber(
+                data.total_population
+            );
+
+
+        document.getElementById(
+            "averageGDP"
+        ).textContent =
+            formatCurrency(
+                data.average_gdp
+            );
+
+
+        document.getElementById(
+            "datasetRows"
+        ).textContent =
+            formatNumber(
+                data.rows
+            );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   NUMBER
+===================================================== */
+
+function formatNumber(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(number)
+    ) {
+
+        return "0";
+
+    }
+
+
+    return number.toLocaleString(
+        "en-US",
+        {
+            maximumFractionDigits: 0
+        }
+    );
+
+}
+
+
+/* =====================================================
+   LARGE NUMBER
+===================================================== */
+
+function formatLargeNumber(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(number)
+    ) {
+
+        return "0";
+
+    }
+
+
+    if (
+        Math.abs(number) >=
+        1000000000
+    ) {
+
+        return (
+            number / 1000000000
+        ).toFixed(2) + " B";
+
+    }
+
+
+    if (
+        Math.abs(number) >=
+        1000000
+    ) {
+
+        return (
+            number / 1000000
+        ).toFixed(2) + " M";
+
+    }
+
+
+    if (
+        Math.abs(number) >=
+        1000
+    ) {
+
+        return (
+            number / 1000
+        ).toFixed(2) + " K";
+
+    }
+
+
+    return number.toLocaleString(
+        "en-US",
+        {
+            maximumFractionDigits: 2
+        }
+    );
+
+}
+
+
+/* =====================================================
+   PERCENTAGE
+===================================================== */
+
+function formatPercentage(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(number)
+    ) {
+
+        return "0.0%";
+
+    }
+
+
+    return (
+        number.toFixed(1)
+        + "%"
+    );
+
+}
+
+
+/* =====================================================
+   GDP
+===================================================== */
+
+function formatCurrency(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(number)
+    ) {
+
+        return "$0";
+
+    }
+
+
+    if (
+        Math.abs(number) >=
+        1000000000000
+    ) {
+
+        return "$" +
+            (
+                number /
+                1000000000000
+            ).toFixed(2)
+            + " T";
+
+    }
+
+
+    if (
+        Math.abs(number) >=
+        1000000000
+    ) {
+
+        return "$" +
+            (
+                number /
+                1000000000
+            ).toFixed(2)
+            + " B";
+
+    }
+
+
+    if (
+        Math.abs(number) >=
+        1000000
+    ) {
+
+        return "$" +
+            (
+                number /
+                1000000
+            ).toFixed(2)
+            + " M";
+
+    }
+
+
+    return "$" +
+        number.toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits: 0
+            }
+        );
+
+}
+
+</script>

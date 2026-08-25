@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}EcoVision | E-Waste Intelligence{% endblock %}
+    </title>
+
+    <meta name="description"
+          content="EcoVision - Advanced E-Waste Analytics, Risk Intelligence and Sustainability Insights">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- =========================================================
+     PAGE LOADER
+========================================================= -->
+
+<div id="pageLoader">
+    <div class="loader-ring"></div>
+    <span>Loading EcoVision...</span>
+</div>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            <i class="fa-solid fa-leaf"></i>
+        </div>
+
+        <div class="brand-text">
+            <strong>EcoVision</strong>
+            <span>E-Waste Intelligence</span>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN NAVIGATION -->
+
+    <div class="nav-section">
+
+        <span class="nav-label">MAIN</span>
+
+        <a href="{{ url_for('index', country=selected_country) }}"
+           class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{{ url_for('insights', country=selected_country) }}"
+           class="nav-item {% if request.endpoint == 'insights' %}active{% endif %}">
+            <i class="fa-solid fa-brain"></i>
+            <span>AI Insights</span>
+        </a>
+
+        <a href="{{ url_for('recommendation', country=selected_country) }}"
+           class="nav-item {% if request.endpoint == 'recommendation' %}active{% endif %}">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Recommendations</span>
+        </a>
+
+    </div>
+
+
+    <div class="nav-section">
+
+        <span class="nav-label">ANALYTICS</span>
+
+        <a href="/countries"
+           class="nav-item {% if request.endpoint == 'countries' %}active{% endif %}">
+            <i class="fa-solid fa-earth-americas"></i>
+            <span>Countries</span>
+        </a>
+
+        <a href="{{ url_for('analytics', country=selected_country) }}"
+           class="nav-item {% if request.endpoint == 'analytics' %}active{% endif %}">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Analytics</span>
+        </a>
+
+    </div>
+
+
+    <div class="nav-section">
+
+        <span class="nav-label">SYSTEM</span>
+
+        <a href="{{ url_for('about', country=selected_country) }}"
+           class="nav-item {% if request.endpoint == 'about' %}active{% endif %}">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>About EcoVision</span>
+        </a>
+
+        <a href="{{ url_for('contact', country=selected_country) }}"
+           class="nav-item {% if request.endpoint == 'contact' %}active{% endif %}">
+            <i class="fa-solid fa-envelope"></i>
+            <span>Contact</span>
+        </a>
+
+    </div>
+
+
+    <!-- SIDEBAR FOOTER -->
+
+    <div class="sidebar-footer">
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+
+            <div>
+                <strong>System Online</strong>
+                <small>Live data environment</small>
+            </div>
+        </div>
+
+        <div class="sidebar-version">
+            EcoVision v2.0
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN AREA
+========================================================= -->
+
+<div class="main-wrapper">
+
+
+    <!-- =====================================================
+         TOPBAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button class="mobile-menu"
+                    id="mobileMenu"
+                    aria-label="Open menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="page-heading">
+
+                <span class="eyebrow">
+                    <span class="live-dot"></span>
+                    LIVE ENVIRONMENTAL INTELLIGENCE
+                </span>
+
+                <h1>
+                    {% block page_heading %}
+                    E-Waste Intelligence Dashboard
+                    {% endblock %}
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOPBAR RIGHT -->
+
+        <div class="topbar-right">
+
+            <!-- COUNTRY SELECTOR -->
+
+            <form method="GET"
+                  action="{{ request.path }}"
+                  class="country-selector">
+
+                <i class="fa-solid fa-earth-americas"></i>
+
+                <select name="country"
+                        onchange="this.form.submit()"
+                        aria-label="Select country">
+
+                    {% if countries %}
+
+                        {% for country in countries %}
+
+                            <option value="{{ country }}"
+                                {% if country == selected_country %}
+                                    selected
+                                {% endif %}>
+                                {{ country }}
+                            </option>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <option>No countries available</option>
+
+                    {% endif %}
+
+                </select>
+
+                <i class="fa-solid fa-chevron-down selector-arrow"></i>
+
+            </form>
+
+
+            <!-- NOTIFICATION -->
+
+            <button class="icon-button"
+                    title="Notifications">
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span class="notification-badge"></span>
+
+            </button>
+
+
+            <!-- PROFILE -->
+
+            <div class="profile">
+
+                <div class="profile-avatar">
+                    EV
+                </div>
+
+                <div class="profile-info">
+                    <strong>EcoVision</strong>
+                    <span>Analytics System</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         COUNTRY CONTEXT BAR
+    ====================================================== -->
+
+    <div class="country-context">
+
+        <div class="context-left">
+
+            <div class="context-icon">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+
+            <div>
+
+                <span>Currently analysing</span>
+
+                <strong>
+                    {{ selected_country if selected_country else "All Countries" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="context-right">
+
+            {% if risk_level %}
+
+                <span class="risk-badge
+                    {% if risk_level == 'High Risk' %}
+                        risk-high
+                    {% elif risk_level == 'Medium Risk' %}
+                        risk-medium
+                    {% elif risk_level == 'Improve' %}
+                        risk-improve
+                    {% else %}
+                        risk-low
+                    {% endif %}">
+
+                    <span class="risk-dot"></span>
+
+                    {{ risk_level }}
+
+                </span>
+
+            {% endif %}
+
+            {% if risk_score is defined %}
+
+                <span class="score-display">
+                    Risk Score
+                    <strong>{{ risk_score }}%</strong>
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PAGE CONTENT
+    ====================================================== -->
+
+    <main class="page-content">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="main-footer">
+
+        <div>
+
+            <strong>
+                <i class="fa-solid fa-leaf"></i>
+                EcoVision
+            </strong>
+
+            <span>
+                Intelligent E-Waste & Sustainability Analytics
+            </span>
+
+        </div>
+
+        <div>
+            © 2026 EcoVision
+        </div>
+
+    </footer>
+
+</div>
+
+
+<!-- =========================================================
+     MOBILE OVERLAY
+========================================================= -->
+
+<div class="sidebar-overlay"
+     id="sidebarOverlay"></div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* -----------------------------------------
+       PAGE LOADER
+    ----------------------------------------- */
+
+    const loader = document.getElementById("pageLoader");
+
+    if (loader) {
+
+        setTimeout(() => {
+
+            loader.classList.add("hide");
+
+        }, 350);
+
+    }
+
+
+    /* -----------------------------------------
+       MOBILE SIDEBAR
+    ----------------------------------------- */
+
+    const sidebar = document.getElementById("sidebar");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    function openSidebar() {
+
+        sidebar.classList.add("mobile-open");
+        overlay.classList.add("show");
+
+    }
+
+    function closeSidebar() {
+
+        sidebar.classList.remove("mobile-open");
+        overlay.classList.remove("show");
+
+    }
+
+    if (mobileMenu) {
+
+        mobileMenu.addEventListener(
+            "click",
+            openSidebar
+        );
+
+    }
+
+    if (overlay) {
+
+        overlay.addEventListener(
+            "click",
+            closeSidebar
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       CLOSE MOBILE SIDEBAR AFTER NAVIGATION
+    ----------------------------------------- */
+
+    document.querySelectorAll(".nav-item").forEach(item => {
+
+        item.addEventListener("click", function () {
+
+            if (window.innerWidth <= 900) {
+
+                closeSidebar();
+
+            }
+
+        });
+
+    });
+
+
+    /* -----------------------------------------
+       SMOOTH PAGE TRANSITION
+    ----------------------------------------- */
+
+    document.querySelectorAll("a").forEach(link => {
+
+        link.addEventListener("click", function (event) {
+
+            const href = this.getAttribute("href");
+
+            if (
+                href &&
+                !href.startsWith("#") &&
+                !href.startsWith("http") &&
+                !this.target
+            ) {
+
+                event.preventDefault();
+
+                document.body.classList.add("page-exit");
+
+                setTimeout(() => {
+
+                    window.location.href = href;
+
+                }, 120);
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

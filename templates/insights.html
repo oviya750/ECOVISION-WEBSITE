@@ -1,0 +1,502 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Insights | EcoVision
+{% endblock %}
+
+{% block page_heading %}
+AI Environmental Insights
+{% endblock %}
+
+
+{% block content %}
+
+<div class="insights-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <section class="insight-hero">
+
+        <div class="hero-content">
+
+            <span class="section-kicker">
+                <i class="fa-solid fa-sparkles"></i>
+                AI-POWERED ANALYSIS
+            </span>
+
+            <h2>
+                Environmental Intelligence
+                for {{ selected_country }}
+            </h2>
+
+            <p>
+                AI-generated environmental insights based on the
+                selected country's e-waste, recycling and economic data.
+            </p>
+
+        </div>
+
+
+        <div class="hero-country">
+
+            <div class="country-globe">
+                <i class="fa-solid fa-earth-americas"></i>
+            </div>
+
+            <div>
+
+                <span>Selected Country</span>
+
+                <strong>
+                    {{ selected_country }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         KEY METRICS
+    ====================================================== -->
+
+    <section class="metric-grid">
+
+
+        <!-- RISK SCORE -->
+
+        <div class="insight-card risk-card">
+
+            <div class="card-top">
+
+                <div class="metric-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <span>AI RISK SCORE</span>
+
+            </div>
+
+            <div class="metric-value">
+
+                {{ risk_score }}<small>%</small>
+
+            </div>
+
+            <div class="metric-label">
+                {{ risk_level }}
+            </div>
+
+            <div class="progress-track">
+
+                <div class="progress-fill"
+                     style="width: {{ risk_score }}%;">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WASTE -->
+
+        <div class="insight-card">
+
+            <div class="card-top">
+
+                <div class="metric-icon">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+
+                <span>WASTE RATE</span>
+
+            </div>
+
+            <div class="metric-value">
+
+                {{ waste_rate }}<small>%</small>
+
+            </div>
+
+            <div class="metric-status">
+                {{ waste_status }}
+            </div>
+
+            <p>
+                {{ waste_message }}
+            </p>
+
+        </div>
+
+
+        <!-- RECYCLING -->
+
+        <div class="insight-card">
+
+            <div class="card-top">
+
+                <div class="metric-icon">
+                    <i class="fa-solid fa-recycle"></i>
+                </div>
+
+                <span>RECYCLING RATE</span>
+
+            </div>
+
+            <div class="metric-value">
+
+                {{ recycling_rate }}<small>%</small>
+
+            </div>
+
+            <div class="metric-status">
+                {{ recycling_status }}
+            </div>
+
+            <p>
+                {{ recycling_message }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         AI SUMMARY
+    ====================================================== -->
+
+    <section class="ai-summary-card">
+
+        <div class="ai-summary-header">
+
+            <div class="ai-icon">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+
+            <div>
+
+                <span>AI ANALYSIS</span>
+
+                <h3>
+                    Environmental Risk Summary
+                </h3>
+
+            </div>
+
+            <div class="ai-live">
+                <span></span>
+                LIVE
+            </div>
+
+        </div>
+
+
+        <div class="ai-summary-body">
+
+            <p>
+                {{ ai_summary }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         COUNTRY DATA
+    ====================================================== -->
+
+    <section class="data-section">
+
+        <div class="section-title">
+
+            <div>
+
+                <span class="section-kicker">
+                    COUNTRY PROFILE
+                </span>
+
+                <h3>
+                    {{ selected_country }} Data Overview
+                </h3>
+
+            </div>
+
+            <span class="data-source">
+                <i class="fa-solid fa-database"></i>
+                Dataset
+            </span>
+
+        </div>
+
+
+        <div class="data-grid">
+
+
+            <!-- POPULATION -->
+
+            <div class="data-item">
+
+                <div class="data-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+                <div>
+
+                    <span>Population</span>
+
+                    <strong>
+
+                        {% if population %}
+                            {{ "{:,.0f}".format(population) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- GDP -->
+
+            <div class="data-item">
+
+                <div class="data-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+
+                <div>
+
+                    <span>GDP</span>
+
+                    <strong>
+
+                        {% if gdp %}
+                            ${{ "{:,.2f}".format(gdp) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- MSW -->
+
+            <div class="data-item">
+
+                <div class="data-icon">
+                    <i class="fa-solid fa-dumpster"></i>
+                </div>
+
+                <div>
+
+                    <span>MSW Generated</span>
+
+                    <strong>
+
+                        {% if msw %}
+                            {{ "{:,.2f}".format(msw) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- COUNTRY -->
+
+            <div class="data-item">
+
+                <div class="data-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+
+                <div>
+
+                    <span>Country</span>
+
+                    <strong>
+                        {{ selected_country }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         INSIGHT CARDS
+    ====================================================== -->
+
+    <section class="interpretation-grid">
+
+
+        <div class="interpret-card">
+
+            <div class="interpret-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div>
+
+                <span>WASTE PRESSURE</span>
+
+                <h3>
+                    {{ waste_status }}
+                </h3>
+
+                <p>
+                    {{ waste_message }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="interpret-card">
+
+            <div class="interpret-icon">
+                <i class="fa-solid fa-recycle"></i>
+            </div>
+
+            <div>
+
+                <span>RECYCLING PERFORMANCE</span>
+
+                <h3>
+                    {{ recycling_status }}
+                </h3>
+
+                <p>
+                    {{ recycling_message }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="interpret-card">
+
+            <div class="interpret-icon">
+                <i class="fa-solid fa-shield"></i>
+            </div>
+
+            <div>
+
+                <span>OVERALL RISK</span>
+
+                <h3>
+                    {{ risk_level }}
+                </h3>
+
+                <p>
+                    The calculated AI risk score is
+                    <strong>{{ risk_score }}%</strong>
+                    for {{ selected_country }}.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RAW DATA
+    ====================================================== -->
+
+    <section class="raw-data-section">
+
+        <div class="section-title">
+
+            <div>
+
+                <span class="section-kicker">
+                    DATASET DETAILS
+                </span>
+
+                <h3>
+                    {{ selected_country }} Raw Data
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="raw-data-table">
+
+            {% if country_data %}
+
+                {% for key, value in country_data.items() %}
+
+                    <div class="raw-row">
+
+                        <span>
+                            {{ key.replace("_", " ") }}
+                        </span>
+
+                        <strong>
+                            {{ value }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-data">
+
+                    <i class="fa-solid fa-database"></i>
+
+                    <h3>
+                        No data available
+                    </h3>
+
+                    <p>
+                        The selected country does not have
+                        available records in the dataset.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

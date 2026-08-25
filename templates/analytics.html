@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}
+ECOVISION | Analytics
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+
+    <section class="page-header">
+
+        <div class="eyebrow">
+            ADVANCED ANALYTICS
+        </div>
+
+        <h1>
+            {{ selected_country }}
+            <span>Analytics</span>
+        </h1>
+
+        <p>
+            Explore the complete analytical profile of
+            {{ selected_country }}.
+        </p>
+
+    </section>
+
+
+    <section class="metric-grid">
+
+        <div class="metric-card">
+
+            <span class="metric-label">
+                RISK SCORE
+            </span>
+
+            <strong>
+                {{ risk_score }}%
+            </strong>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <span class="metric-label">
+                RISK LEVEL
+            </span>
+
+            <strong>
+                {{ risk_level }}
+            </strong>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <span class="metric-label">
+                AI CONFIDENCE
+            </span>
+
+            <strong>
+                {{ ai_confidence }}%
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="eyebrow">
+                    DATA ANALYSIS
+                </div>
+
+                <h2>
+                    {{ selected_country }} Indicators
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="data-grid">
+
+            {% for key, value in country_data.items() %}
+
+            <article class="data-card">
+
+                <span>
+                    {{ key.replace("_", " ") }}
+                </span>
+
+                <strong>
+                    {{ value }}
+                </strong>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}
